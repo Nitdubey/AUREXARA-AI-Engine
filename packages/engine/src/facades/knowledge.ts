@@ -7,12 +7,28 @@ import {
   PDFParser,
   InMemoryVectorStore,
   SupabaseVectorStore,
-  OpenAIEmbeddings,
   RAGPipeline,
   KeywordReranker
 } from '@aurexara/knowledge-core';
-import type { VectorStore } from '@aurexara/knowledge-core';
+import type { VectorStore, EmbeddingProvider } from '@aurexara/knowledge-core';
 import type { IAIProvider } from '@aurexara/ai-core';
+
+/**
+ * Adapter to wrap any IAIProvider into an EmbeddingProvider for KnowledgeCore
+ */
+class ProviderEmbeddingsAdapter implements EmbeddingProvider {
+  constructor(private readonly provider: IAIProvider | undefined) {}
+
+  public async embed(text: string): Promise<readonly number[]> {
+    if (!this.provider) {
+      // Fallback pseudo-deterministic embedding if no provider is configured
+      const baseVal = (text.length % 100) / 100;
+      return Array.from({ length: 1536 }, (_, i) => baseVal + (i % 10) * 0.01);
+    }
+    const response = await this.provider.embed({ input: text });
+    return response.embeddings[0]!;
+  }
+}
 
 /**
  * Facade class that simplifies interactions with the knowledge and memory subsystems,
@@ -55,7 +71,7 @@ export class KnowledgeFacade {
    *                             If not provided, a fallback mock embedder configuration will be used.
    */
   constructor(_embeddingsProvider?: IAIProvider) {
-    const embedder = new OpenAIEmbeddings('');
+    const embedder = new ProviderEmbeddingsAdapter(_embeddingsProvider);
 
     // Auto-detect Supabase configuration from environment
     const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL'];

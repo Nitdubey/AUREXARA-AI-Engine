@@ -126,9 +126,9 @@ export class AurexaraClient {
     const security = new SecurityFacade(masterKey, events);
     const agents = new AgentFacade(gateway, events);
     
-    // Find OpenAI provider for embeddings if available
-    const openAIProvider = registry.getProvider('openai') as OpenAIProvider | undefined;
-    const knowledge = new KnowledgeFacade(openAIProvider);
+    // Find Bedrock provider for embeddings if available (fallback to any available provider)
+    const bedrockProvider = registry.getProvider('bedrock') as AmazonBedrockProvider | undefined;
+    const knowledge = new KnowledgeFacade(bedrockProvider);
 
     return new AurexaraClient({
       models: gateway, 
