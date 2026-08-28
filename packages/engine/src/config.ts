@@ -37,10 +37,7 @@ export const EngineConfigSchema = z.object({
     anthropic: ProviderConfigSchema.optional(),
     google: ProviderConfigSchema.optional(),
     bedrock: ProviderConfigSchema.optional(),
-  }).refine(
-    (providers) => Object.values(providers).some(p => p !== undefined),
-    'At least one AI provider must be configured'
-  ),
+  }),
 
   /** Gateway configuration. */
   gateway: GatewayConfigSchema.optional(),
