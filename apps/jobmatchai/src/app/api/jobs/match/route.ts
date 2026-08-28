@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { engine } from '@/lib/ai/provider';
+import { checkSecurity, corsHeaders } from '@/lib/security/middleware';
 import type { SearchResult } from '@aurexara/knowledge-core';
 
 export async function POST(req: Request) {
+  // Security: API Key + Rate Limit + CORS check
+  const blocked = checkSecurity(req);
+  if (blocked) return blocked;
+
   try {
     const { jobDescription } = await req.json();
 

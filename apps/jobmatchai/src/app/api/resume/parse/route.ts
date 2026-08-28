@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { engine } from '@/lib/ai/provider';
+import { checkSecurity, corsHeaders } from '@/lib/security/middleware';
 
 export async function POST(req: Request) {
+  // Security: API Key + Rate Limit + CORS check
+  const blocked = checkSecurity(req);
+  if (blocked) return blocked;
+
   try {
     const { resumeText } = await req.json();
 
