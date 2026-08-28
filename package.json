@@ -1,0 +1,30 @@
+{
+  "name": "aurexara-ai-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AUREXARA AI Engine — Centralized intelligence infrastructure platform",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "lint": "turbo run lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "cross-env INTEGRATION_TEST=true vitest run",
+    "dev": "turbo run dev",
+    "clean": "turbo run clean",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0",
+    "prettier": "^3.4.0",
+    "vitest": "^3.0.0",
+    "cross-env": "^7.0.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

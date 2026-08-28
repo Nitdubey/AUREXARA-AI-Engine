@@ -1,0 +1,21 @@
+export { EventBus } from './bus.js';
+export type {
+  EngineEvent,
+  EngineEventMap,
+  EngineEventType,
+  EventHandler,
+  WildcardEventHandler,
+  EventMetadata,
+  Unsubscribe,
+  AgentStartedEvent,
+  AgentCompletedEvent,
+  AgentFailedEvent,
+  ModelCalledEvent,
+  ModelStreamStartedEvent,
+  ModelStreamCompletedEvent,
+  ToolCalledEvent,
+  RetrievalPerformedEvent,
+  SecurityViolationEvent,
+  CostThresholdEvent,
+  ProviderHealthEvent,
+} from './types.js';
