@@ -19,7 +19,7 @@ export interface ModelCapabilities {
 
 /** Hints for the model router to select the optimal model. */
 export interface RoutingHints {
-  readonly taskType: 'classification' | 'generation' | 'reasoning' | 'coding' | 'embedding';
+  readonly taskType: 'classification' | 'generation' | 'reasoning' | 'coding' | 'embedding' | 'extraction' | 'writing' | 'conversation' | 'sprinter' | 'fast';
   readonly latencyTarget?: 'fast' | 'balanced' | 'quality';
   readonly costTarget?: 'minimum' | 'balanced' | 'best';
   readonly privacyLevel?: 'standard' | 'private' | 'enterprise';

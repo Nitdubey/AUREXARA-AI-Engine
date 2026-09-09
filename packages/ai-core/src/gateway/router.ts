@@ -87,11 +87,30 @@ export class ModelRouter {
   }
 
   private scoreTaskType(model: ModelCapabilities, taskType: string): number {
-    // Reasoning tasks prefer reasoning-tier models
-    // Coding tasks prefer premium models (Claude, GPT-4o)
-    // Classification tasks prefer fast models
-    // Generation tasks prefer balanced models
-    // Map tier to task type affinity
+    // ── Arsenal Direct Routing ──
+    // Maps each Arsenal task type directly to its specialist model.
+    // If the model ID matches the specialist for this task type, give it a massive score boost.
+    const arsenalRouting: Record<string, string> = {
+      extraction:    'qwen.qwen3-235b-a22b-2507',        // Perfect JSON extraction
+      fast:          'nvidia.nemotron-super-3-120b',       // ATS/Tech keyword matching
+      classification:'nvidia.nemotron-super-3-120b',       // ATS/Tech keyword matching
+      writing:       'mistral.mistral-large-3-675b-instruct', // Professional writing
+      reasoning:     'deepseek.v3.2',                      // Deep logic & strategy
+      conversation:  'openai.gpt-oss-120b',                // Roleplay & empathy
+      coding:        'qwen.qwen3-coder-480b-a35b-instruct',// Code specialist
+      sprinter:      'nvidia.nemotron-nano-3-30b',          // Ultra-cheap quick tasks
+      generation:    'mistral.mistral-large-3-675b-instruct', // General generation
+    };
+
+    const targetModel = arsenalRouting[taskType];
+    if (targetModel && model.id === targetModel) {
+      return 100; // Massive boost — this IS the specialist
+    }
+    if (targetModel && model.id !== targetModel) {
+      return -5; // Penalize non-specialists when a specialist exists
+    }
+
+    // Fallback: Tier-based scoring for unknown task types
     const tierScores: Record<string, Record<string, number>> = {
       reasoning: { reasoning: 30, fast: 0, balanced: 10, premium: 20 },
       coding: { reasoning: 15, fast: 5, balanced: 10, premium: 25 },

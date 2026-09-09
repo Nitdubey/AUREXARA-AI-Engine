@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { engine } from '@/lib/ai/provider';
 import { checkSecurity, corsHeaders } from '@/lib/security/middleware';
+import { safeParseLLMJson } from '@/lib/ai/parse-json';
 
 export async function POST(req: Request) {
   // Security: API Key + Rate Limit + CORS check
@@ -31,13 +32,13 @@ export async function POST(req: Request) {
       ],
       model: 'auto',
       routingHints: {
-        taskType: 'reasoning'
+        taskType: 'extraction'
       }
     });
 
-    let parsedData = {};
+    let parsedData: Record<string, unknown> = {};
     try {
-      parsedData = JSON.parse(result.content);
+      parsedData = safeParseLLMJson(result.content) as Record<string, unknown>;
     } catch (e) {
       console.warn("Could not parse JSON from LLM", result.content);
       parsedData = { raw: result.content };

@@ -15,11 +15,12 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "openai": "^4.77.0",
     "@anthropic-ai/sdk": "^0.39.0",
-    "zod": "^3.24.0",
+    "@aurexara/events": "workspace:*",
     "@aurexara/observability": "workspace:*",
-    "@aurexara/events": "workspace:*"
+    "@aws-sdk/client-bedrock-runtime": "^3.1121.0",
+    "openai": "^4.77.0",
+    "zod": "^3.24.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

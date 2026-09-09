@@ -1,5 +1,5 @@
 import { ModelGateway, ProviderRegistry, ModelRouter, CostTracker } from '@aurexara/ai-core';
-import { OpenAIProvider, AnthropicProvider, AmazonBedrockProvider } from '@aurexara/ai-core/providers';
+import { OpenAIProvider, AnthropicProvider, AmazonBedrockProvider, BedrockMantleProvider } from '@aurexara/ai-core/providers';
 import { Tracer, ConsoleExporter, StructuredLogger, MetricsCollector } from '@aurexara/observability';
 import { EventBus } from '@aurexara/events';
 import { validateConfig, configFromEnv } from './config.js';
@@ -113,6 +113,11 @@ export class AurexaraClient {
     }
     if (resolvedConfig.providers.bedrock) {
       registry.register(new AmazonBedrockProvider(resolvedConfig.providers.bedrock), { priority: 3, enabled: true });
+    }
+    // Mantle provider (Arsenal Plan) — highest priority
+    if ((resolvedConfig.providers as Record<string, unknown>).mantle) {
+      const mantleConfig = (resolvedConfig.providers as Record<string, { apiKey: string; baseUrl?: string }>).mantle!;
+      registry.register(new BedrockMantleProvider(mantleConfig), { priority: 0, enabled: true });
     }
     const gateway = new ModelGateway({ 
       registry, 

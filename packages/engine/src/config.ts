@@ -37,6 +37,7 @@ export const EngineConfigSchema = z.object({
     anthropic: ProviderConfigSchema.optional(),
     google: ProviderConfigSchema.optional(),
     bedrock: ProviderConfigSchema.optional(),
+    mantle: ProviderConfigSchema.optional(),
   }),
 
   /** Gateway configuration. */
@@ -86,8 +87,18 @@ export function configFromEnv(product: string): EngineConfig {
   }
 
   const bedrockKey = process.env['AWS_BEARER_TOKEN_BEDROCK'];
+  const awsAccessKey = process.env['AWS_ACCESS_KEY_ID'];
+  if (bedrockKey || awsAccessKey) {
+    // apiKey can be the bearer token or a placeholder when using IAM credentials
+    providers.bedrock = { apiKey: bedrockKey || 'iam-credentials' };
+  }
+
+  // Mantle provider (OpenAI-compatible endpoint) — Arsenal Plan
   if (bedrockKey) {
-    providers.bedrock = { apiKey: bedrockKey };
+    providers.mantle = { 
+      apiKey: bedrockKey,
+      baseUrl: `https://bedrock-mantle.${process.env['BEDROCK_REGION'] || 'us-east-1'}.api.aws/v1`,
+    };
   }
 
   return {
