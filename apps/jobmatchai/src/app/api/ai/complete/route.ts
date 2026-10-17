@@ -9,28 +9,41 @@
 import { NextResponse } from 'next/server';
 import { AurexaraClient } from '@aurexara/engine';
 
-// Task → Arsenal specialist model mapping
+// Task → Arsenal specialist model mapping (Plan 2 — 6-Specialist Arsenal)
 const TASK_MODEL_MAP: Record<string, string> = {
+  // 1. Sprinter (Nemotron Nano 30B)
+  follow_up_email:         'nvidia.nemotron-nano-3-30b',
+  agent_score:             'nvidia.nemotron-nano-3-30b',
+  community_generate:      'nvidia.nemotron-nano-3-30b',
+
+  // 2. ATS & Fast Matcher (Nemotron Super 120B)
   jd_match:                'nvidia.nemotron-super-3-120b',
   jd_arsenal:              'nvidia.nemotron-super-3-120b',
+  builder_generate:        'nvidia.nemotron-super-3-120b',
+  analyze_gaps:            'nvidia.nemotron-super-3-120b',
+
+  // 3. JSON Extractor (Qwen3 235B)
+  resume_parse:            'qwen.qwen3-235b-a22b-2507',
+
+  // 4. Conversationalist (GPT-OSS 120B)
+  mock_interview:          'openai.gpt-oss-120b',
+  negotiate:               'openai.gpt-oss-120b',
+  rejection_analysis:      'openai.gpt-oss-120b',
+
+  // 5. Strategist (DeepSeek V3.2 685B)
   should_apply:            'deepseek.v3.2',
   skill_gap:               'deepseek.v3.2',
+  interview_prep:          'deepseek.v3.2',
+  agent_evolve:            'deepseek.v3.2',
+
+  // 6. Master Writer (Mistral Large 3 675B)
   resume_rewrite:          'mistral.mistral-large-3-675b-instruct',
   builder_enhance:         'mistral.mistral-large-3-675b-instruct',
-  builder_generate:        'nvidia.nemotron-nano-3-30b',
-  resume_parse:            'qwen.qwen3-235b-a22b-2507',
-  follow_up_email:         'nvidia.nemotron-nano-3-30b',
-  mock_interview:          'openai.gpt-oss-120b',
-  interview_prep:          'mistral.mistral-large-3-675b-instruct',
-  negotiate:               'openai.gpt-oss-120b',
+  cover_letter:            'mistral.mistral-large-3-675b-instruct',
   linkedin_audit_generate: 'mistral.mistral-large-3-675b-instruct',
   linkedin_optimize:       'mistral.mistral-large-3-675b-instruct',
-  rejection_analysis:      'openai.gpt-oss-120b',
-  agent_score:             'nvidia.nemotron-nano-3-30b',
-  agent_evolve:            'deepseek.v3.2',
-  seo_generate:            'nvidia.nemotron-nano-3-30b',
+  seo_generate:            'mistral.mistral-large-3-675b-instruct',
   blog_generate:           'mistral.mistral-large-3-675b-instruct',
-  community_generate:      'nvidia.nemotron-nano-3-30b',
   default:                 'deepseek.v3.2',
 };
 
